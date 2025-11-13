@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<title>Admin – Schlüsselverwaltung</title>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8fafc;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-group {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.input-wrapper {
+    flex: 1;
+    min-width: 280px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: white;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+.key-list {
+    list-style: none;
+}
+
+.key-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+    background: #fafbfc;
+    transition: border-color 0.2s;
+}
+
+.key-item:hover {
+    border-color: #cbd5e1;
+}
+
+.key-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.key-icon {
+    width: 2rem;
+    height: 2rem;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+}
+
+.key-name {
+    font-weight: 500;
+    color: #1e293b;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.9rem;
+}
+
+.error {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    display: none;
+}
+
+.error.show {
+    display: block;
+}
+
+.success {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    display: none;
+}
+
+.success.show {
+    display: block;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+}
+
+.empty-state-icon {
+    width: 4rem;
+    height: 4rem;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.5rem;
+}
+
+.empty-state h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 0.5rem;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.stat-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 0.75rem;
+    text-align: center;
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .form-group {
+        flex-direction: column;
+    }
+    
+    .input-wrapper {
+        min-width: auto;
+    }
+    
+    .key-item {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+    
+    .stats {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🔐 Schlüsselverwaltung</h1>
+        <p>Verwalten Sie Ihre API-Schlüssel sicher und effizient</p>
+    </div>
+    
+    <div class="card">
+        <h2 class="card-title">Neuen Schlüssel hinzufügen</h2>
+        <div class="form-group">
+            <div class="input-wrapper">
+                <input type="text" id="newKeyInput" class="form-input" placeholder="API-Schlüssel eingeben (z.B. user123)" />
+            </div>
+            <button onclick="addKey()" class="btn btn-primary">Schlüssel hinzufügen</button>
+        </div>
+        <div class="error" id="addError"></div>
+        <div class="success" id="addSuccess"></div>
+    </div>
+
+    <div class="card">
+        <h2 class="card-title">Verwaltete Schlüssel</h2>
+        <div class="stats" id="statsContainer">
+            <div class="stat-item">
+                <div class="stat-number" id="keyCount">0</div>
+                <div class="stat-label">Aktive Schlüssel</div>
+            </div>
+        </div>
+        
+        <div id="loadingSpinner" class="loading">
+            <div class="spinner"></div>
+        </div>
+        
+        <ul id="keyList" class="key-list"></ul>
+        
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-state-icon">🔑</div>
+            <h3>Keine Schlüssel vorhanden</h3>
+            <p>Fügen Sie Ihren ersten API-Schlüssel hinzu, um zu beginnen.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+let isLoading = false;
+
+async function loadKeys() {
+    if (isLoading) return;
+    isLoading = true;
+    
+    const spinner = document.getElementById("loadingSpinner");
+    const list = document.getElementById("keyList");
+    const emptyState = document.getElementById("emptyState");
+    const keyCount = document.getElementById("keyCount");
+    
+    spinner.style.display = "flex";
+    list.style.display = "none";
+    emptyState.style.display = "none";
+    
+    try {
+        const res = await fetch("/admin/keys");
+        const keys = await res.json();
+        
+        list.innerHTML = "";
+        keyCount.textContent = keys.length;
+        
+        if (keys.length === 0) {
+            emptyState.style.display = "block";
+        } else {
+            keys.forEach(k => {
+                const li = document.createElement("li");
+                li.className = "key-item";
+                li.innerHTML = `
+                    <div class="key-info">
+                        <div class="key-icon">🔑</div>
+                        <span class="key-name">${k}</span>
+                    </div>
+                    <button onclick="deleteKey('${k}')" class="btn btn-danger">
+                        Löschen
+                    </button>
+                `;
+                list.appendChild(li);
+            });
+            list.style.display = "block";
+        }
+    } catch (error) {
+        console.error("Fehler beim Laden der Schlüssel:", error);
+        showError("addError", "Fehler beim Laden der Schlüssel.");
+    } finally {
+        spinner.style.display = "none";
+        isLoading = false;
+    }
+}
+
+async function addKey() {
+    const key = document.getElementById("newKeyInput").value.trim();
+    
+    if (!key) {
+        showError("addError", "Bitte geben Sie einen gültigen Schlüssel ein.");
+        return;
+    }
+
+    try {
+        const res = await fetch("/admin/keys", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ key })
+        });
+
+        if (res.ok) {
+            document.getElementById("newKeyInput").value = "";
+            hideError("addError");
+            showSuccess("addSuccess", "Schlüssel wurde erfolgreich hinzugefügt.");
+            await loadKeys();
+        } else {
+            showError("addError", "Fehler beim Hinzufügen des Schlüssels.");
+        }
+    } catch (error) {
+        console.error("Fehler beim Hinzufügen:", error);
+        showError("addError", "Netzwerkfehler beim Hinzufügen des Schlüssels.");
+    }
+}
+
+async function deleteKey(key) {
+    if (!confirm(`Möchten Sie den Schlüssel "${key}" wirklich löschen?\n\nDiese Aktion kann nicht rückgängig gemacht werden.`)) {
+        return;
+    }
+    
+    try {
+        const res = await fetch(`/admin/keys/${encodeURIComponent(key)}`, {
+            method: "DELETE"
+        });
+
+        if (res.ok) {
+            await loadKeys();
+            showSuccess("addSuccess", "Schlüssel wurde erfolgreich gelöscht.");
+        } else {
+            showError("addError", "Fehler beim Löschen des Schlüssels.");
+        }
+    } catch (error) {
+        console.error("Fehler beim Löschen:", error);
+        showError("addError", "Netzwerkfehler beim Löschen des Schlüssels.");
+    }
+}
+
+function showError(elementId, message) {
+    hideSuccess("addSuccess");
+    const errorElement = document.getElementById(elementId);
+    errorElement.textContent = message;
+    errorElement.classList.add("show");
+    setTimeout(() => hideError(elementId), 5000);
+}
+
+function hideError(elementId) {
+    const errorElement = document.getElementById(elementId);
+    errorElement.classList.remove("show");
+}
+
+function showSuccess(elementId, message) {
+    hideError("addError");
+    const successElement = document.getElementById(elementId);
+    successElement.textContent = message;
+    successElement.classList.add("show");
+    setTimeout(() => hideSuccess(elementId), 3000);
+}
+
+function hideSuccess(elementId) {
+    const successElement = document.getElementById(elementId);
+    successElement.classList.remove("show");
+}
+
+document.getElementById("newKeyInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        addKey();
+    }
+});
+
+// Initial laden
+loadKeys();
+</script>
+
+</body>
+</html>

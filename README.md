@@ -1,5 +1,5 @@
 Die Geschützte-Lebenslauf-Applikation ist eine Spring-Boot-basierte Anwendung, mit der ein Lebenslauf (CV) online bereitgestellt wird, jedoch nur für Personen sichtbar, die über einen gültigen, zuvor generierten Zugriffsschlüssel verfügen.
-Über eine einfache Admin-Oberfläche können Schlüssel flexibel erstellt oder gelöscht werden. Dadurch kann Felix gezielt kontrollieren, wer seinen Lebenslauf einsehen darf – ohne dass er eine PDF versenden oder öffentlich ins Internet stellen muss.
+Über eine einfache Admin-Oberfläche können Schlüssel flexibel erstellt oder gelöscht werden. Dadurch kann kontrolliert werden, wer den Lebenslauf einsehen darf – ohne dass eine PDF versendet oder öffentlich ins Internet gestellt werden muss.
 
 🔑 Zugriffssystem für Lebenslauf
 Zugriff auf den CV nur mit gültigem Schlüssel
